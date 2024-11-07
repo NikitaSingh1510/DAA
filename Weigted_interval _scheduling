@@ -1,0 +1,42 @@
+#WEIGHTED INTERVAL SCHEDULING
+#input from the user
+n=int(input("Enter the number of intervals:"))
+start_time=[0]*(n+1)
+finish_time=[0]*(n+1)
+value=[0]*(n+1)
+M=[0]*(n+1) 
+for i in range(1,n+1):
+    print("FOR INTERVAL/JOB= ",i)
+    start_time[i]=int(input("Enter the start time:"))
+    finish_time[i]=int(input("Enter the finish time:"))
+    value[i]=int(input("Enter the value/weight:"))
+
+#computing p[j]
+p=[0]*(n+1)
+for j in range(n,0,-1):
+    for i in range(j-1,0,-1):
+        if (start_time[j]>=finish_time[i]):
+            p[j]=i
+            break
+print(p)
+
+#function to compute the optimal of each subproblem
+#iterative method
+def iterative_m_compute(n):
+    M[0]=0
+    for j  in range(1,n+1):
+        M[j]=max(value[j]+M[p[j]],M[j-1])
+
+#Function to find the intervals
+def find_solution(j):
+    if j==0:
+        return
+    elif ((value[j]+M[p[j]])>=M[j-1]):
+        print("Iterval ",j)
+        find_solution(p[j])
+    else:
+        find_solution(j-1)
+iterative_m_compute(n)
+print(M)
+print("\n\n--THE INTERVALS TO SCHEDULE:")
+find_solution(n)
